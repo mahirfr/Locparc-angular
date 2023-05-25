@@ -1,0 +1,79 @@
+<h1 class="text-center text-white">Commandes en attente</h1>
+<div class="custom-container">
+    <table>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td data-label="Utilisateur">{{ order.user.email }}</td>
+            <td data-label="Date de début">{{ order.startDate | date:'dd-MM-yyyy' }}</td>
+            <td data-label="Date de fin"  >{{ order.endDate   | date:'dd-MM-yyyy' }}</td>
+            <td data-label="Matériel commandé">
+                <div *ngFor="let items of order.orderedItems">
+                  <p class="item-color">{{ items.item.name }}</p>
+                </div>
+            </td>
+            <td data-label="Action">
+              <button mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" (click)="getOrder(order.id)">Consulter</button>
+          
+              <button type="button"  mat-raised-button color="warn" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="getOrder(order.id)">
+                Refuser
+              </button>
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+</div>
+
+
+
+<!-- Refusing modal -->
+<div *ngIf="ordered != null" class="modal fade text-white" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Commande numéro : {{ ordered.id }}, faite par {{ ordered.user.email }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label for="motive" >Motif de refus:</label>
+        <input type="text" name="motive" id="motive" value="Matériel momentanément indisponible" class="modal-input">
+      </div>
+      <div class="modal-footer">
+        <button type="button" mat-stroked-button color="basic" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" mat-raised-button color="warn">Envoyer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Consulting modal -->
+<div *ngIf="ordered != null" class="modal fade text-white" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">N° de commande : {{ ordered.id }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div>        
+          <p>De {{ ordered.startDate | date:'dd-MM-yyyy' }} à {{ ordered.endDate | date:'dd-MM-yyyy' }}</p><br>
+        </div>
+
+        <div *ngFor="let item of ordered.orderedItems">
+          <p>N° équipement : <span class="underline">{{ item.item.id }}</span></p> 
+          <p>Nom : <span class="item-color">{{ item.item.name }}</span></p> 
+          <p *ngIf="item.item.description  != undefined">Description : <span class="item-color">{{ item.item.description }}</span></p>
+          <p *ngIf="item.item.serialNumber != undefined">Numéro de série : <span class="item-color">{{ item.item.serialNumber }}</span></p> 
+          <p *ngIf="item.item.pricePerDay  != undefined">Prix journalier : <span class="underline">{{ item.item.pricePerDay }}</span> €</p>
+          <hr>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" mat-stroked-button color="basic" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" mat-raised-button color="primary">Accepter</button>
+      </div>
+    </div>
+  </div>
+</div>

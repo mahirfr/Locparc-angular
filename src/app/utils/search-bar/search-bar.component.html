@@ -1,0 +1,18 @@
+<form >
+    <input class="form-control mx-auto" type="text" [(ngModel)]="searchQuery" name="search" (input)="search()" autocomplete="off" placeholder="Saisir le nom d'un element">
+    
+    <!-- TODO: make checkboxes to filter the search -->
+    <div class="d-flex justify-content-center checkboxes">
+        <mat-checkbox>Check me!</mat-checkbox>
+        <mat-checkbox>Check me!</mat-checkbox>
+        <mat-checkbox>Check me!</mat-checkbox>
+    </div>
+
+</form>
+<div class="d-flex justify-content-center mt-5">
+    <div class="text-white" *ngIf="searchQuery.length != 0">
+        <p class="m-3" *ngFor="let item of searchResults">
+            {{ item.name }}
+        </p>
+    </div> 
+</div>
