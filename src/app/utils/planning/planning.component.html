@@ -3,20 +3,18 @@
     <table>
         <tbody>
           <tr *ngFor="let order of orders">
-            <td data-label="Utilisateur">{{ order.user.email }}</td>
-            <td data-label="Date de début">{{ order.startDate | date:'dd-MM-yyyy' }}</td>
-            <td data-label="Date de fin"  >{{ order.endDate   | date:'dd-MM-yyyy' }}</td>
+            <td data-label="Utilisateur">{{ order.user?.email }}</td>
+            <td data-label="Date de début">{{ order?.startDate | date:'dd-MM-yyyy' }}</td>
+            <td data-label="Date de fin"  >{{ order?.endDate   | date:'dd-MM-yyyy' }}</td>
             <td data-label="Matériel commandé">
                 <div *ngFor="let items of order.orderedItems">
-                  <p class="item-color">{{ items.item.name }}</p>
+                  <p class="item-color">{{ items?.item?.name }}</p>
                 </div>
             </td>
             <td data-label="Action">
-              <button mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" (click)="getOrder(order.id)">Consulter</button>
+              <button type="button" mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal2" (click)="getOrder(order.id)">Consulter</button>
           
-              <button type="button"  mat-raised-button color="warn" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="getOrder(order.id)">
-                Refuser
-              </button>
+              <button type="button" mat-raised-button color="warn" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getOrder(order.id)">Refuser</button>
             </td>
             
           </tr>
@@ -26,12 +24,13 @@
 
 
 
+
 <!-- Refusing modal -->
-<div *ngIf="ordered != null" class="modal fade text-white" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade text-white" id="myModal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Commande numéro : {{ ordered.id }}, faite par {{ ordered.user.email }}</h5>
+        <h5 class="modal-title" id="myModalLabel">Commande numéro : {{ ordered.id }}, faite par {{ ordered.user?.email }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -47,17 +46,17 @@
 </div>
 
 <!-- Consulting modal -->
-<div *ngIf="ordered != null" class="modal fade text-white" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade text-white" id="myModal2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">N° de commande : {{ ordered.id }}</h5>
+        <h5 class="modal-title" id="myModalLabel2">N° de commande : {{ ordered.id }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         
         <div>        
-          <p>De {{ ordered.startDate | date:'dd-MM-yyyy' }} à {{ ordered.endDate | date:'dd-MM-yyyy' }}</p><br>
+          <p>De {{ ordered!.startDate | date:'dd-MM-yyyy' }} à {{ ordered.endDate | date:'dd-MM-yyyy' }}</p><br>
         </div>
 
         <div *ngFor="let item of ordered.orderedItems">

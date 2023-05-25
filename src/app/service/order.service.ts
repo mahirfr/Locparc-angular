@@ -14,7 +14,6 @@ export class OrderService {
     return this.http.get<Order[]>("http://localhost:8080/api/orders/")
       .pipe(
         catchError(error => {
-          console.log('HTTP error:', error);
           return throwError(() => new Error('Une erreur est survenue, ressayez plus tard'));
         })
       );
@@ -26,11 +25,10 @@ export class OrderService {
 
 
   // TODO: get order by id 
-  getOrderById(id: number): Observable<Order> {
+  getOrderById(id?: number): Observable<Order> {
     return this.http.get<Order>("http://localhost:8080/api/orders/" + id)
       .pipe(
         catchError(error => {
-          console.log('HTTP error:', error);
           return throwError(() => new Error('Une erreur est survenue, ressayez plus tard'));
         })
       );

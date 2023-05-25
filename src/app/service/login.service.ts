@@ -36,8 +36,6 @@ export class LoginService {
       }
       this._connectedUser.next(user);
 
-
-      console.log(user);
     } else {
       this._connectedUser.next(null);
     } 

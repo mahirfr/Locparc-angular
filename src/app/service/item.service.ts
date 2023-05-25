@@ -10,7 +10,7 @@ export class ItemService {
 
   constructor(private http: HttpClient) { }
 
-  getAllAvailableItems(): Observable<Item[]> {
+  getAllItems(): Observable<Item[]> {
     return this.http.get<Item[]>("http://localhost:8080/api/items/")
       .pipe(
         catchError(error => {

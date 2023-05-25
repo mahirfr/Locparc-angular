@@ -2,17 +2,38 @@
     <input class="form-control mx-auto" type="text" [(ngModel)]="searchQuery" name="search" (input)="search()" autocomplete="off" placeholder="Saisir le nom d'un element">
     
     <!-- TODO: make checkboxes to filter the search -->
-    <div class="d-flex justify-content-center checkboxes">
-        <mat-checkbox>Check me!</mat-checkbox>
-        <mat-checkbox>Check me!</mat-checkbox>
-        <mat-checkbox>Check me!</mat-checkbox>
+    <div class="d-flex justify-content-center mt-3 text-white">
+        <mat-form-field>
+            <mat-label>Categories</mat-label>
+            <mat-select [formControl]="itemControl" multiple>
+                <mat-optgroup *ngFor="let category of categories" [label]="category.name">
+                <mat-option *ngFor="let subCat of category.subCategories" [value]="subCat.name">
+                    {{subCat.name}}
+                </mat-option>
+                </mat-optgroup>
+            </mat-select>
+        </mat-form-field>
     </div>
 
 </form>
 <div class="d-flex justify-content-center mt-5">
-    <div class="text-white" *ngIf="searchQuery.length != 0">
-        <p class="m-3" *ngFor="let item of searchResults">
-            {{ item.name }}
-        </p>
+    <div class="" *ngIf="searchQuery.length != 0">
+        <div class="m-3" *ngFor="let item of searchResults">
+            
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <mat-card-title-group>
+                        <mat-card-title class="me-2">{{ item.name }}</mat-card-title>
+                        <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
+                        <img mat-card-md-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" >
+                    </mat-card-title-group>
+                </mat-card-header>
+                <mat-card-actions class="mx-auto">
+                    <button mat-raised-button color="accent" class="me-1">Consulter</button>
+                    <button mat-raised-button color="primary">Ajouter au panier</button>
+                </mat-card-actions>
+            </mat-card>
+
+        </div>
     </div> 
 </div>

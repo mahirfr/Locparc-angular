@@ -14,23 +14,17 @@ export class PlanningComponent implements OnInit {
 
   orders: Order[] = [];
   orderedItems: OrderItems[] = [];
-  ordered: Order | null = null;
+  ordered: Order = new Order();
 
   constructor(private orderService: OrderService) { }
 
   ngOnInit() {
     this.orderService.getAllOrders().subscribe(
       orders => this.orders = orders
-    )
-
-    // this.orders.forEach(order => {
-    //   order.orderedItems.forEach(items => {
-    //     this.orderedItems = items
-    //   })
-    // });
+    ) 
   }
 
-  getOrder(id: number): void {
+  getOrder(id?: number): void {
     this.orderService.getOrderById(id).subscribe(
       order => this.ordered = order
     )

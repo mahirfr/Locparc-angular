@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ItemService } from 'src/app/service/item.service';
-import { MatCheckboxModule } from '@angular/material/checkbox'; 
+import { FormControl } from '@angular/forms';
+import { CategoriesService } from 'src/app/service/categories.service';
+import { Category } from 'src/app/model/Category/Category';
 
 @Component({
   selector: 'app-search-bar',
@@ -9,15 +11,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export class SearchBarComponent implements OnInit {
   searchQuery: string = "";
+  itemControl = new FormControl("");
+  categories: Category[] = [];
   searchResults: any[] = [];
   items: any[] = [];
 
-  constructor(
-              private itemService: ItemService) { }
+  constructor(private itemService    : ItemService,
+              private categoryService: CategoriesService) { }
 
   ngOnInit() {
-    this.itemService.getAllAvailableItems().subscribe(
-      items => this.items = items
+    this.categoryService.getAllCategories().subscribe(
+      categories => this.categories = categories
     );
   }
 
@@ -25,11 +29,12 @@ export class SearchBarComponent implements OnInit {
     // this.searchResults = this.items.filter(
     //   item => item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     // );
-    if (this.searchQuery.length >= 1)
+    if (this.searchQuery.length >= 1) 
       this.itemService.getAvailableItems(this.searchQuery.toLowerCase()).subscribe(
         items => this.searchResults = items
       )
-    return null;
   }
+
+
 
 }
