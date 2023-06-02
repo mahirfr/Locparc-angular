@@ -2,7 +2,7 @@
 <div class="custom-container">
     <table>
         <tbody>
-          <tr *ngFor="let order of orders">
+          <tr *ngFor="let order of orders" class="border">
             <td data-label="Utilisateur">{{ order.user?.email }}</td>
             <td data-label="Date de début">{{ order?.startDate | date:'dd-MM-yyyy' }}</td>
             <td data-label="Date de fin"  >{{ order?.endDate   | date:'dd-MM-yyyy' }}</td>

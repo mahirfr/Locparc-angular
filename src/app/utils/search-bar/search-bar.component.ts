@@ -29,6 +29,7 @@ export class SearchBarComponent implements OnInit {
     // this.searchResults = this.items.filter(
     //   item => item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     // );
+    // If input not empty get items
     if (this.searchQuery.length >= 1) 
       this.itemService.getAvailableItems(this.searchQuery.toLowerCase()).subscribe(
         items => this.searchResults = items
