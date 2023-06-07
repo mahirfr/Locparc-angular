@@ -15,7 +15,7 @@ export class AdminGuard {
   state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
   if (this.loginService._connectedUser.value?.role?.name == "ROLE_ADMIN") 
-  return true;
+    return true;
 
   return this.router.parseUrl("/access-denied");
 

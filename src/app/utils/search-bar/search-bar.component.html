@@ -1,11 +1,13 @@
-<form >
-    <input class="form-control mx-auto" type="text" [(ngModel)]="searchQuery" name="search" (input)="search()" autocomplete="off" placeholder="Saisir le nom d'un element">
+<form [formGroup]="searchForm">
+    <input class="form-control mx-auto" type="text" [(ngModel)]="searchQuery" name="search" (input)="search()" autocomplete="off" placeholder="Saisir le nom d'un element" [ngModelOptions]="{standalone: true}">
     
-    <!-- TODO: make checkboxes to filter the search -->
-    <div class="d-flex justify-content-center mt-3 text-white">
+<h3 class="text-center text-white mt-3">Filtrer par categorie</h3>
+
+    <!-- TODO: add a quantity left field -->
+    <div class="d-flex justify-content-center text-white">
         <mat-form-field>
             <mat-label>Categories</mat-label>
-            <mat-select [formControl]="itemControl" multiple>
+            <mat-select  formControlName="selectedSubCategories" multiple (selectionChange)="onSelectedValuesChange()">
                 <mat-optgroup *ngFor="let category of categories" [label]="category.name">
                 <mat-option *ngFor="let subCat of category.subCategories" [value]="subCat.name">
                     {{subCat.name}}
@@ -17,10 +19,10 @@
 
 </form>
 <div class="d-flex justify-content-center mt-5">
-    <div class="" *ngIf="searchQuery.length != 0">
+    <div class="" >
         <div class="m-3" *ngFor="let item of searchResults">
             
-            <mat-card class="example-card">
+            <mat-card class="example-card" *ngIf="searchResults.length > 0">
                 <mat-card-header>
                     <mat-card-title-group>
                         <mat-card-title class="me-2">{{ item.name }}</mat-card-title>

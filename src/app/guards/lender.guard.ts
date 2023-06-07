@@ -14,8 +14,9 @@ canActivate(
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-  if (this.loginService._connectedUser.value?.role?.name == "ROLE_LENDER") 
-  return true;
+  if (this.loginService._connectedUser.value?.role?.name == "ROLE_LENDER" 
+  || this.loginService._connectedUser.value?.role?.name == "ROLE_ADMIN") 
+    return true;
 
   return this.router.parseUrl("/access-denied");
 

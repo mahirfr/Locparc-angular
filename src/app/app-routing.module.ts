@@ -6,6 +6,12 @@ import { UserGuard } from './guards/user.guard';
 import { ShoppingCartComponent } from './utils/shopping-cart/shopping-cart.component';
 import { EquipementComponent } from './pages/equipement/equipement.component';
 import { AccessDeniedComponent } from './pages/errors/access-denied/access-denied.component';
+import { LenderGuard } from './guards/lender.guard';
+import { Order } from './model/Order';
+import { OrdersComponent } from './pages/orders/orders.component';
+
+// TODO: Add routes for new components
+// TODO: Add route for not found page
 
 const routes: Routes = [
   {
@@ -18,6 +24,11 @@ const routes: Routes = [
   {
     path: "access-denied",
     component: AccessDeniedComponent, 
+    canActivate: [UserGuard, LenderGuard]
+  },
+  {
+    path: "orders",
+    component: OrdersComponent,
     canActivate: [UserGuard]
   },
   {

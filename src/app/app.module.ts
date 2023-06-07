@@ -23,7 +23,10 @@ import { EquipementComponent } from './pages/equipement/equipement.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PlanningComponent } from './utils/planning/planning.component'; 
 import { MatTableModule } from '@angular/material/table';
-import { AccessDeniedComponent } from './pages/errors/access-denied/access-denied.component'; 
+import { AccessDeniedComponent } from './pages/errors/access-denied/access-denied.component';
+import { OrdersComponent } from './pages/orders/orders.component';
+import { CreateUsersComponent } from './pages/create-users/create-users.component';
+import { ProfileComponent } from './pages/profile/profile.component'; 
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import { AccessDeniedComponent } from './pages/errors/access-denied/access-denie
     ShoppingCartComponent,
     EquipementComponent,
     PlanningComponent,
-    AccessDeniedComponent
+    AccessDeniedComponent,
+    OrdersComponent,
+    CreateUsersComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
