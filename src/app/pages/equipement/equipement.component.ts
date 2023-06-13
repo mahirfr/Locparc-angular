@@ -108,8 +108,8 @@ export class EquipementComponent {
     this.selectedSubCategory = this.formGroup.get('selectedSubCategory')?.value;
     // disable model input if the selected sub category doesn't have models
     for(let i = 0; i < this.categories.length; i++) 
-      for(let j = 0; j < this.categories[i].subCategories.length; j++) 
-        if (this.categories[i].subCategories[j].name == this.selectedSubCategory) 
+      for(let j = 0; j < this.categories[i].subCategories!.length; j++) 
+        if (this.categories[i].subCategories![j].name == this.selectedSubCategory) 
           if (this.categories[i].name !== "INFORMATIQUE") {
             this.formGroup.get('selectedModel')?.disable(); 
             return;
@@ -121,15 +121,6 @@ export class EquipementComponent {
     this.selectedModel = this.formGroup.get('selectedModel')?.value
   }
   
-
-  // openCategoryModal() {
-  //   // open modal for adding a category
-  // }
-
-  // openManufacturerModal() {
-  //   // open modal for adding a manufacturer
-
-  // }
 
   openSubCategoryModal(categoryId: number) {
     // open modal for adding a sub categor
@@ -151,10 +142,53 @@ export class EquipementComponent {
 
   onSubmitCategory() {
     // add category to database
+    this.categoryName = this.formGroupCategory.get('categoryName')?.value;
+
+    if (this.categoryName.length != 0 && this.categoryName != undefined) {
+      
+      const category: Category = {
+        name: this.categoryName
+      }
+
+      this.categoryService.create(category).subscribe(
+        {
+          next: (response) => { 
+            this.categories.push(category);
+            console.log("Catégorie créée avec succès", response);
+          },
+          error: (error) => {
+            console.log("Erreur lors de la création de la catégorie", error);
+          }
+        }
+      );
+
+
+    }
   }
 
   onSubmitManufacturer() {
     // add manufacturer to database
+    this.manufacturerName = this.formGroupManufacturer.get('manufacturerName')?.value;
+
+    if (this.manufacturerName.length != 0 && this.manufacturerName != undefined) {
+      const manufacturer: Manufacturer = {
+        name: this.manufacturerName
+      }
+
+      this.manufacturerService.create(manufacturer).subscribe(
+        {
+          next: (response) => {
+            this.manufacturers.push(manufacturer);
+            console.log("Fabricant créé avec succès", response);
+          },
+          error: (error) => {
+            console.log("Erreur lors de la création du fabricant", error);
+          }
+        }
+      );
+
+    }    
+
   }
 
   onSubmitSubCategory() {
@@ -181,18 +215,15 @@ export class EquipementComponent {
       this.subCategoryService.create(subCategory).subscribe(
         {
           next: (response) => { 
+            // update category with new sub category from the category list
+            this.categories.find(category => category.id == this.categoryId)?.subCategories!.push(subCategory);
             console.log("Sous catégorie créée avec succès", response);
           },
           error: (error) => {
             console.log("Une erreur est survenue, reesayez plus tard", error);
           }
-        });
-      // update category with new sub category from the category list
-      // update categories list
-      // this.categoryService.getAllCategories().subscribe(
-      //   categories => this.categories = categories
-      // );
-      this.categories.find(category => category.id == this.categoryId)?.subCategories.push(subCategory);
+        }
+      );
     }
   }
 
@@ -220,19 +251,15 @@ export class EquipementComponent {
       this.modelService.create(model).subscribe(
         {
           next: (response) => {
+            // update manufacturer with new model from the manufacturer list
+            this.manufacturers.find(manufacturer => manufacturer.id == this.manufacturerId)?.models!.push(model);
             console.log("Modèle créé avec succès", response);
           },
           error: (error) => {
             console.log("Une erreur est survenue, reesayez plus tard", error);
           }
-        });
-      // update manufacturer with new model from the manufacturer list
-      this.manufacturers.find(manufacturer => manufacturer.id == this.manufacturerId)?.models.push(model);
-      
-      // refresh manufacturers list
-      // this.manufacturerService.getAllManufacturers().subscribe(
-      //   (        manufacturers: any) => this.manufacturers = manufacturers
-      // );
+        }
+      );
     }
   }
 }

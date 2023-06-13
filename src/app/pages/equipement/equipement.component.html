@@ -28,8 +28,8 @@
                     {{subCat.name}}
                 </mat-option>
                 <br>
-                <button type="button" mat-raised-button color="primary" [value]="category.id" (click)="openSubCategoryModal(category.id)" data-bs-toggle="modal" data-bs-target="#myModal3">
-                    <mat-icon>add</mat-icon>Sous-categorie
+                <button type="button" mat-raised-button color="primary" [value]="category.id" (click)="openSubCategoryModal(category.id!)" data-bs-toggle="modal" data-bs-target="#myModal3">
+                    <mat-icon>add</mat-icon>Sous-catégorie
                 </button> 
             </mat-optgroup>
             <hr>
@@ -52,7 +52,7 @@
                     {{model.reference}}
                 </mat-option>
                 <br>
-                <button type="button" mat-raised-button color="primary" data-bs-toggle="modal" (click)="openModelModal(manufacturer.id)" data-bs-target="#myModal4">
+                <button type="button" mat-raised-button color="primary" data-bs-toggle="modal" (click)="openModelModal(manufacturer.id!)" data-bs-target="#myModal4">
                     <mat-icon>add</mat-icon>Modèle
                 </button> 
             </mat-optgroup>
@@ -82,7 +82,7 @@
 
     <!-- Description field -->
     <mat-form-field class="form-field">
-        <mat-label>Déscription</mat-label>
+        <mat-label>Description</mat-label>
         <textarea matInput formControlName="itemDescription"></textarea>
     </mat-form-field>
 
@@ -133,21 +133,21 @@
             </div>
             <div class="modal-body">
                         
-                    <form [formGroup]="formGroupCategory" (ngSubmit)="onSubmitCategory()">
-                        <mat-form-field class="modal-form-field">
-                            <mat-label>Nom de la catégorie</mat-label>
-                            <input matInput formControlName="categoryName" type="text" />
-                            <mat-error *ngIf="formGroupCategory.get('categoryName')?.hasError('required')">
-                                Nom de la catégorie requis
-                            </mat-error>
+                <form [formGroup]="formGroupCategory" (ngSubmit)="onSubmitCategory()">
+                    <mat-form-field class="modal-form-field">
+                        <mat-label>Nom de la catégorie</mat-label>
+                        <input matInput formControlName="categoryName" type="text" />
+                        <mat-error *ngIf="formGroupCategory.get('categoryName')?.hasError('required')">
+                            Nom de la catégorie requis
+                        </mat-error>
 
-                        </mat-form-field>
-                    </form>
+                    </mat-form-field>
+                    <button [disabled]="!formGroupCategory.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
+                </form>
           
             </div>
             <div class="modal-footer">
             <button type="button" mat-stroked-button color="basic" data-bs-dismiss="modal">Fermer</button>
-            <button [disabled]="!formGroupCategory.valid" type="submit" mat-raised-button color="primary">Envoyer</button>
         </div>
         </div>
     </div>
@@ -171,12 +171,12 @@
                         Nom du fabricant requis
                     </mat-error>
                 </mat-form-field>
+                <button [disabled]="!formGroupManufacturer.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
             </form>
           
         </div>
         <div class="modal-footer">
           <button type="button" mat-stroked-button color="basic" data-bs-dismiss="modal">Fermer</button>
-          <button [disabled]="!formGroupManufacturer.valid" type="submit" mat-raised-button color="primary">Envoyer</button>
         </div>
       </div>
     </div>
@@ -197,10 +197,10 @@
                     <mat-label>Nom de la souscatégorie</mat-label>
                     <input matInput formControlName="subCategoryName" type="text" class="modal-size"/>
                     <mat-error *ngIf="formGroupCategory.get('subCategoryName')?.hasError('required')">
-                        Nom de la sous catégorie requis
+                        Nom de la sous-catégorie requis
                     </mat-error>
                 </mat-form-field>
-                <button [disabled]="!formGroupSubCategory.valid" type="submit" mat-raised-button color="primary">Envoyer</button>
+                <button [disabled]="!formGroupSubCategory.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
             </form>
 
         </div>
@@ -230,7 +230,7 @@
                         Nom de modèle requis
                     </mat-error>
                 </mat-form-field>
-                <button [disabled]="!formGroupModel.valid" type="submit" mat-raised-button color="primary">Envoyer</button>
+                <button [disabled]="!formGroupModel.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
             </form>
 
         </div>

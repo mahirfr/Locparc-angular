@@ -10,6 +10,10 @@ export class CategoriesService {
 
   constructor(private http: HttpClient) { }
 
+  create(category: Category): Observable<Category> {
+    return this.http.post<Category>("http://localhost:8080/api/items/categories", category);
+  }
+
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>("http://localhost:8080/api/items/categories")
       // .pipe(error => {
