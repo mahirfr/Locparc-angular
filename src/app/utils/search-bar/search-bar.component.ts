@@ -16,7 +16,6 @@ export class SearchBarComponent implements OnInit {
 	items: any[] = [];
 	selectedSubCategories: string[] = [];
 	searchForm: FormGroup;
-	checked = false; 
 
 	constructor(private itemService: ItemService,
 		private categoryService: CategoriesService,

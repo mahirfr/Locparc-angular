@@ -4,8 +4,8 @@
         <tbody>
           <tr *ngFor="let order of orders" class="border">
             <td data-label="Utilisateur">{{ order.user?.email }}</td>
-            <td data-label="Date de début">{{ order?.startDate | date:'dd-MM-yyyy' }}</td>
-            <td data-label="Date de fin"  >{{ order?.endDate   | date:'dd-MM-yyyy' }}</td>
+            <td data-label="Date de début">{{ order?.startDate  }}</td>
+            <td data-label="Date de fin"  >{{ order?.endDate    }}</td>
             <td data-label="Matériel commandé">
                 <div *ngFor="let items of order.orderedItems">
                   <p class="item-color">{{ items?.item?.name }}</p>
@@ -54,10 +54,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        
+        <!-- FIXME: make date pipes -->
         <div>        
-          <p>De {{ ordered!.startDate | date:'dd-MM-yyyy' }} à {{ ordered.endDate | date:'dd-MM-yyyy' }}</p><br>
+          <p>De {{ ordered!.startDate  }} à {{ ordered.endDate  }}</p><br>
         </div>
+
+        <!-- TODO: add order location -->
 
         <div *ngFor="let item of ordered.orderedItems">
           <p>N° équipement : <span class="underline">{{ item.item.id }}</span></p> 

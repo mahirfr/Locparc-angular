@@ -53,4 +53,10 @@ export class ItemService {
 	}
 
 
+	// TODO: Add a post method to add an item
+	// TODO: Add a post method to add multiple items
+	// TODO: Add a put method to update an item
+	// TODO: Add a delete method to delete an item
+
+
 }
