@@ -26,10 +26,8 @@ import { AccessDeniedComponent                       } from './pages/errors/acce
 import { OrdersComponent                             } from './pages/orders/orders.component'                      ;
 import { CreateUsersComponent                        } from './pages/create-users/create-users.component'          ;
 import { ProfileComponent                            } from './pages/profile/profile.component'                    ;
-import { MatDatepickerModule                         } from '@angular/material/datepicker'                         ;
-import { MatNativeDateModule                         } from '@angular/material/core'                               ;
-import { LOCALE_ID                                   } from '@angular/core'                                        ;
-
+import { MatTabsModule                               } from '@angular/material/tabs';
+import { FormControlForceTypePipe } from './pipes/form-control-force-type.pipe'                               ;
 
 @NgModule({
   declarations: [
@@ -43,7 +41,8 @@ import { LOCALE_ID                                   } from '@angular/core'     
     AccessDeniedComponent,
     OrdersComponent,
     CreateUsersComponent,
-    ProfileComponent
+    ProfileComponent,
+    FormControlForceTypePipe
   ],
   imports: [
     BrowserModule,
@@ -60,11 +59,9 @@ import { LOCALE_ID                                   } from '@angular/core'     
     MatSelectModule,
     MatCheckboxModule,
     MatTableModule,
-    MatDatepickerModule,
-    MatNativeDateModule
+    MatTabsModule
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-              { provide: LOCALE_ID, useValue: 'fr-FR' }],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

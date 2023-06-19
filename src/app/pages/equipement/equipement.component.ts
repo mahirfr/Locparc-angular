@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/model/Category/Category';
 import { SubCategory } from 'src/app/model/Category/SubCategory';
+import { Item } from 'src/app/model/Item';
 import { Manufacturer } from 'src/app/model/Manufacturer/Manufacturer';
 import { Model } from 'src/app/model/Manufacturer/Model';
 import { CategoriesService } from 'src/app/service/categories.service';
+import { ItemService } from 'src/app/service/item.service';
 import { ManufacturersService } from 'src/app/service/manufacturers.service';
 import { ModelService } from 'src/app/service/model.service';
 import { SubCategoryService } from 'src/app/service/sub-category.service';
@@ -23,7 +25,6 @@ export class EquipementComponent {
   itemName            : string = "";
   selectedSubCategory : string = "";
   selectedModel       : string = "";
-  serialNumber        : string = "";
   itemDescription     : string = "";
   quantity            : number = 1 ;
   // warantyDate         : string = "";
@@ -53,6 +54,11 @@ export class EquipementComponent {
   modelName                  : string = "";
   manufacturerId             : number = 0;
 
+  // form group for adding a serial number
+  formGroupSerialNumber : FormGroup;
+  serialNumberArray     : (string | null)[] = [];
+
+  // validator patterns
   static numberPattern = "^[0-9]*$";
   static datePattern   = "^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])-d{4}$";
   
@@ -61,14 +67,14 @@ export class EquipementComponent {
               private categoryService    : CategoriesService   ,
               private manufacturerService: ManufacturersService,
               private subCategoryService : SubCategoryService  ,
-              private modelService       : ModelService
+              private modelService       : ModelService        ,
+              private itemService        : ItemService
               ) {
                   // form group for adding an item
                   this.formGroup = this.formBuilder.group({
                     itemName           : ["", [Validators.required]], 
                     selectedSubCategory: ["", [Validators.required]],
                     selectedModel      : "",
-                    serialNumber       : "",
                     itemDescription    : "",
                     quantity           : ["",  [Validators.required]],
                     // validator pattern for date
@@ -93,7 +99,36 @@ export class EquipementComponent {
                   this.formGroupModel = this.formBuilder.group({
                     modelName          : ["", [Validators.required]],
                   });
+                  // form group for adding serial numbers
+                  this.formGroupSerialNumber = this.formBuilder.group({
+                    serialNumbers: this.formBuilder.array([])
+                  });
+                  
   }
+
+  get serialNumbers():  FormArray{
+    return this.formGroupSerialNumber.controls['serialNumbers'] as FormArray;
+  }
+
+  getRange(count: number): number[] {
+    const range = [];
+    for (let i = 0; i < count; i++) {
+      range.push(i);
+    }
+    return range;
+  }
+
+  generateSerialNumberFormControls(selectedQuantity: number) {
+    this.serialNumbers.clear();
+
+    for (let i = 0; i < selectedQuantity; i++) {
+      const serialNumberForm = this.formBuilder.group({
+        serialNumber: ['', Validators.maxLength(255)]
+      });
+      this.serialNumbers.push(serialNumberForm);
+    }
+  }
+
 
   ngOnInit() {
 		this.categoryService.getAllCategories().subscribe(
@@ -102,18 +137,27 @@ export class EquipementComponent {
     this.manufacturerService.getAllManufacturers().subscribe(
       manufacturers => this.manufacturers = manufacturers
     );
+
 	}
+
 
   onSelectedSubCatValueChange() {
     this.selectedSubCategory = this.formGroup.get('selectedSubCategory')?.value;
     // disable model input if the selected sub category doesn't have models
     for(let i = 0; i < this.categories.length; i++) 
       for(let j = 0; j < this.categories[i].subCategories!.length; j++) 
-        if (this.categories[i].subCategories![j].name == this.selectedSubCategory) 
+        if (this.categories[i].subCategories![j].name == this.selectedSubCategory) {
+          this.categoryId = i;  
           if (this.categories[i].name !== "INFORMATIQUE") {
             this.formGroup.get('selectedModel')?.disable(); 
+            this.selectedModel = "";
+            return;
+          } else {
+            this.formGroup.get('selectedModel')?.enable(); 
             return;
           }
+        }
+          
   }
 
 
@@ -134,11 +178,202 @@ export class EquipementComponent {
     if (manufacturerId == undefined) return;
     this.manufacturerId = manufacturerId;
   }
+
+  openSerialNumberModal() {
+    
+  }
   
+  // TODO: add image file path
   onSubmit() {
     // add item to database
-    console.log(this.formGroup.value);
+    this.itemName = this.formGroup.get('itemName')?.value;
+    this.selectedSubCategory = this.formGroup.get('selectedSubCategory')?.value;
+    this.selectedModel = this.formGroup.get('selectedModel')?.value;
+    this.quantity = this.formGroup.get('quantity')?.value;
+    this.itemDescription = this.formGroup.get('itemDescription')?.value;
+    this.onMaintenance = this.formGroup.get('onMaintenance')?.value;
+    this.existing = this.formGroup.get('existing')?.value;
+
+    if (this.itemName.length != 0 && this.itemName != undefined ||
+        this.selectedSubCategory.length != 0 && this.selectedSubCategory != undefined ||
+        this.quantity != undefined && this.quantity <= 0 ||
+        this.existing != undefined || 
+        this.onMaintenance != undefined) {
+      
+      // if the category is not informatique, we don't need to add a model
+      if (this.categories[this.categoryId].name != "INFORMATIQUE" &&
+          (this.selectedModel.length == 0 ||
+            this.selectedModel == undefined)) { 
+
+        if (this.itemDescription == undefined) {
+          this.itemDescription = "";  
+        }
+
+        console.log(this.categories[this.categoryId].subCategories!.find(subCategory => subCategory.name == this.selectedSubCategory));
+
+        const item: Item = {
+          name: this.itemName,
+          subCategory: {
+            id: this.categories[this.categoryId].subCategories!.find(subCategory => subCategory.name == this.selectedSubCategory)!.id,
+            name: this.selectedSubCategory,
+            category: {
+              id: this.categories[this.categoryId].id,
+              name: this.categories[this.categoryId].name
+            }
+          },
+          description: this.itemDescription,
+          onMaintenance: this.onMaintenance,
+          existing: this.existing
+        }
+
+
+        if (Number.isInteger(this.quantity) && this.quantity >= 2) {
+          let items: Item[] = [];
+          for (let i = 0; i < this.quantity; i++) {
+            // adding the same item to the array
+            items.push(item);
+          }
+          // istead of calling the service multiple times, we call it once
+          this.itemService.createMultiple(items).subscribe({
+              next: () => {
+                alert("Equipements créés avec succès");
+              },
+              error: (error) => {
+                alert("Erreur lors de la création des équipements  " + error);
+              }
+            }
+          );
+        } else if (Number.isInteger(this.quantity) && this.quantity == 1) {
+          this.itemService.create(item).subscribe({
+              next: () => {               
+                alert("Equipement créé avec succès");
+              },
+              error: () => {
+                alert("Erreur lors de la création de l'équipement");
+              }
+            }
+          );
+        }
+
+      }
+      // if the category is informatique, we need to add a model and possibly serial numbers
+      else if (this.categories[this.categoryId].name == "INFORMATIQUE" &&
+          (this.selectedModel.length > 0 || this.selectedModel != undefined)) {
+            
+        if (this.itemDescription == undefined) {
+          this.itemDescription = "";  
+        }
+
+        const subCategory = {
+          id: this.categories[this.categoryId].subCategories!.find(subCategory => subCategory.name == this.selectedSubCategory)!.id,
+          name: this.selectedSubCategory,
+          category: {
+            id: this.categories[this.categoryId].id,
+            name: this.categories[this.categoryId].name
+          }
+        }
+
+        const model = {
+          id: this.manufacturers[this.manufacturerId].models!.find(model => model.reference == this.selectedModel)!.id,
+          reference: this.selectedModel,
+          manufacturer: {
+            id: this.manufacturers[this.manufacturerId].id,
+            name: this.manufacturers[this.manufacturerId].name
+          }
+        }
+        
+        const item: Item = {
+          name: this.itemName,
+          subCategory: subCategory,
+          model: model,
+          description: this.itemDescription,
+          onMaintenance: this.onMaintenance,
+          existing: this.existing
+        }
+
+        if (this.serialNumberArray.length == 0 && this.quantity == 1) {
+          this.itemService.create(item).subscribe({
+              next: () => {
+                alert("Equipement créé avec succès");
+              },
+              error: () => {
+                alert("Erreur lors de la création de l'équipement");
+              }
+            });
+        } else if (this.serialNumberArray.length == 0 && this.quantity > 1) {
+          let items: Item[] = [];
+          for (let i = 0; i < this.quantity; i++) {
+            // adding the same item to the array
+            items.push(item);
+          }
+          // istead of calling the service multiple times, we call it once
+          this.itemService.createMultiple(items).subscribe({
+              next: () => {
+                alert("Equipements créés avec succès");
+              },
+              error: (error) => {
+                alert("Erreur lors de la création des équipements  " + error);
+              }
+            }
+          );
+        } else if (this.serialNumberArray.length > 0 && this.quantity > 1) {
+          const items: Item[] = [];
+          if (this.serialNumberArray.length != this.quantity) {
+            for (let i = 0; i < this.quantity - this.serialNumberArray.length; i++)
+              this.serialNumberArray.push(null);
+          }
+          for (let i = 0; i < this.serialNumberArray.length; i++) {
+            const item: Item = {
+              name: this.itemName,
+              subCategory: subCategory,
+              model: model,
+              description: this.itemDescription,
+              onMaintenance: this.onMaintenance,
+              existing: this.existing,
+              serialNumber: this.serialNumberArray[i]
+            }
+            items.push(item);
+          }
+          
+          this.itemService.createMultiple(items).subscribe({
+              next: () => {
+                alert("Equipement créé avec succès");
+              },
+              error: () => {
+                alert("Erreur lors de la création de l'équipement");
+              }
+            });
+        } else if (this.serialNumberArray.length > 0 && this.quantity == 1) {
+          
+          if (this.serialNumberArray[0] == undefined || this.serialNumberArray[0] == "")
+            this.serialNumberArray[0] = null;
+
+          const item: Item = {
+            name: this.itemName,
+            subCategory: subCategory,
+            model: model,
+            description: this.itemDescription,
+            onMaintenance: this.onMaintenance,
+            existing: this.existing,
+            serialNumber: this.serialNumberArray[0]
+          }
+
+          this.itemService.create(item).subscribe({
+              next: () => {
+                alert("Equipement créé avec succès");
+              },
+              error: () => {
+                alert("Erreur lors de la création de l'équipement");
+              }
+            });
+
+        }
+          // alert("Erreur lors de la création de l'équipement");
+
+      }
+    }
   }
+  
 
   onSubmitCategory() {
     // add category to database
@@ -152,10 +387,13 @@ export class EquipementComponent {
 
       this.categoryService.create(category).subscribe(
         {
-          next: (response) => { 
-            this.categories.push(category);
-            console.log("Catégorie créée avec succès", response);
+          next: () => { 
+            this.categoryService.getAllCategories().subscribe(
+              categories => this.categories = categories
+            );
+            console.log("Catégorie créée avec succès");
           },
+          // FIXME: error handling
           error: (error) => {
             console.log("Erreur lors de la création de la catégorie", error);
           }
@@ -171,16 +409,21 @@ export class EquipementComponent {
     this.manufacturerName = this.formGroupManufacturer.get('manufacturerName')?.value;
 
     if (this.manufacturerName.length != 0 && this.manufacturerName != undefined) {
+
+      this.manufacturerName = this.manufacturerName.toUpperCase();
       const manufacturer: Manufacturer = {
         name: this.manufacturerName
       }
 
       this.manufacturerService.create(manufacturer).subscribe(
         {
-          next: (response) => {
-            this.manufacturers.push(manufacturer);
-            console.log("Fabricant créé avec succès", response);
+          next: () => {
+            this.manufacturerService.getAllManufacturers().subscribe(
+              manufacturers => this.manufacturers = manufacturers
+            );
+            console.log("Fabricant créé avec succès");
           },
+        // FIXME: error handling
           error: (error) => {
             console.log("Erreur lors de la création du fabricant", error);
           }
@@ -214,11 +457,14 @@ export class EquipementComponent {
 
       this.subCategoryService.create(subCategory).subscribe(
         {
-          next: (response) => { 
+          next: () => { 
             // update category with new sub category from the category list
-            this.categories.find(category => category.id == this.categoryId)?.subCategories!.push(subCategory);
-            console.log("Sous catégorie créée avec succès", response);
+            this.categoryService.getAllCategories().subscribe(
+              categories => this.categories = categories
+            );
+            console.log("Sous catégorie créée avec succès");
           },
+          // FIXME: error handling
           error: (error) => {
             console.log("Une erreur est survenue, reesayez plus tard", error);
           }
@@ -250,11 +496,14 @@ export class EquipementComponent {
 
       this.modelService.create(model).subscribe(
         {
-          next: (response) => {
+          next: () => {
             // update manufacturer with new model from the manufacturer list
-            this.manufacturers.find(manufacturer => manufacturer.id == this.manufacturerId)?.models!.push(model);
-            console.log("Modèle créé avec succès", response);
+            this.manufacturerService.getAllManufacturers().subscribe(
+              manufacturers => this.manufacturers = manufacturers
+            );
+            console.log("Modèle créé avec succès");
           },
+          // FIXME: error handling
           error: (error) => {
             console.log("Une erreur est survenue, reesayez plus tard", error);
           }
@@ -262,5 +511,17 @@ export class EquipementComponent {
       );
     }
   }
+
+  // Get every serial number from the form
+  onSubmitSerialNumbers() {
+    this.serialNumberArray = [];
+    if (this.serialNumbers.value.length > 0) { 
+      for (let serialNumber of this.serialNumbers.value) {
+        console.log(serialNumber.serialNumber);
+        this.serialNumberArray.push(serialNumber.serialNumber);
+      }
+    }
+  }
+
 }
 

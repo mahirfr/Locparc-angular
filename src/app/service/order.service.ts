@@ -20,8 +20,8 @@ export class OrderService {
   }
 
   // TODO: get pending orders
-  getPendingOrders(): Observable<Order> {
-    return this.http.get<Order>("http://localhost:8080/api/orders/pending")
+  getPendingOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>("http://localhost:8080/api/orders/pending")
       .pipe(
         catchError(error => {
           return throwError(() => new Error('Une erreur est survenue, ressayez plus tard'));

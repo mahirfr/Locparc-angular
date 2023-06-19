@@ -67,6 +67,7 @@
         </mat-error>
     </mat-form-field>
 
+
     <!-- Quantity field -->
     <mat-form-field class="form-field">
         <mat-label>Quantité</mat-label>
@@ -74,11 +75,15 @@
         <mat-error *ngIf="formGroup.get('quantity')?.hasError('required')">
             Quantité de l'équipement requise
         </mat-error>
-       
         <mat-error *ngIf="formGroup.get('quantity')?.hasError('pattern')">
             Entrez un nombre
         </mat-error>
+        <button type="button" mat-raised-button color="primary" class="mx-1 button-size" (click)="generateSerialNumberFormControls(formGroup.get('quantity')?.value)" data-bs-toggle="modal" data-bs-target="#myModal5" [disabled]="!formGroup.get('selectedModel')?.enabled || !formGroup.get('quantity')?.value || !formGroup.valid">
+            <mat-icon>add</mat-icon> Numéro de série
+        </button>
     </mat-form-field>
+
+    <!-- Button to open serial number if model and quantity selected -->
 
     <!-- Description field -->
     <mat-form-field class="form-field">
@@ -241,3 +246,44 @@
     </div>
   </div>
   
+<!-- Serial number modal -->
+<div class="modal fade text-white" id="myModal5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel5" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <h5 class="modal-title" id="myModalLabel4">N° de commande : {{ ordered.id }}</h5> -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+            <!-- <div *ngFor="let value of inputValues; let i = index">
+                <input type="text" placeholder="Numéro de série {{ i + 1 }}">
+            </div> -->
+            <form [formGroup]="formGroupSerialNumber" (ngSubmit)="onSubmitSerialNumbers()">
+
+                <ng-container formArrayName="serialNumbers">
+                
+                    <ng-container *ngFor="let serialForm of serialNumbers.controls; let i = index">
+
+                        <ng-container [formGroup]="serialForm | formControlForceType">
+
+                            <mat-form-field class="modal-form-field">
+                                <mat-label>Numéro de série {{ i + 1 }}</mat-label>
+                                <input matInput formControlName="serialNumber" type="text" class="modal-size"/>
+                                <mat-error *ngIf="serialForm.get('serialNumber')?.hasError('maxlength')">
+                                    Numéro de série trop long
+                                </mat-error>
+                            </mat-form-field>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                <button [disabled]="!formGroupSerialNumber.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
+            </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" mat-stroked-button color="basic" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+</div> 

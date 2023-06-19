@@ -19,7 +19,7 @@ export class PlanningComponent implements OnInit {
   constructor(private orderService: OrderService) { }
 
   ngOnInit() {
-    this.orderService.getAllOrders().subscribe(
+    this.orderService.getPendingOrders().subscribe(
       orders => this.orders = orders
     ) 
   }

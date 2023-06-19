@@ -9,6 +9,8 @@ import { AccessDeniedComponent } from './pages/errors/access-denied/access-denie
 import { LenderGuard } from './guards/lender.guard';
 import { Order } from './model/Order';
 import { OrdersComponent } from './pages/orders/orders.component';
+import { CreateUsersComponent } from './pages/create-users/create-users.component';
+import { AdminGuard } from './guards/admin.guard';
 
 // TODO: Add routes for new components
 // TODO: Add route for not found page
@@ -29,7 +31,7 @@ const routes: Routes = [
   {
     path: "orders",
     component: OrdersComponent,
-    canActivate: [UserGuard]
+    canActivate: [AdminGuard, LenderGuard]
   },
   {
     path: "shopping-cart", 
@@ -39,8 +41,13 @@ const routes: Routes = [
   {
     path: "equipement",
     component: EquipementComponent,
-    canActivate: [UserGuard]
-  }
+    canActivate: [AdminGuard]
+  },
+  {
+    path: "create-users",
+    component: CreateUsersComponent,
+    canActivate: [AdminGuard]
+  },
 ];
 
 @NgModule({

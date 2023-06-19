@@ -35,7 +35,7 @@ export class SearchBarComponent implements OnInit {
 
 	onSelectedValuesChange() {
 		this.selectedSubCategories = this.searchForm.get('selectedSubCategories')?.value;
-		// console.log(this.selectedSubCategories)
+
 		if (this.searchQuery.length === 0 && this.selectedSubCategories.length >= 1) {
 			// get all items of that category 
 			this.itemService.getAvailableItemsBySubCategories(this.selectedSubCategories).subscribe(
@@ -48,7 +48,8 @@ export class SearchBarComponent implements OnInit {
 				items => this.searchResults = items
 			);
 		} else if (this.searchQuery.length >= 1 && this.selectedSubCategories.length === 0) {
-			this.itemService.getAvailableItemsBySubCategories(this.selectedSubCategories).subscribe(
+			// get all items of that name
+			this.itemService.getAvailableItemsByName(this.searchQuery).subscribe(
 				items => this.searchResults = items
 			);
 		} else {

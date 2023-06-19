@@ -10,8 +10,10 @@ export class ItemService {
 
 	constructor(private http: HttpClient) { }
 
+	URL = "http://localhost:8080/api/items";
+
 	getAllItems(): Observable<Item[]> {
-		return this.http.get<Item[]>("http://localhost:8080/api/items/")
+		return this.http.get<Item[]>(this.URL)
 			.pipe(
 				catchError(error => {
 					// Handle the error appropriately
@@ -23,7 +25,7 @@ export class ItemService {
 
 
 	getAvailableItemsByName(itemName: string): Observable<Item[]> {
-		return this.http.get<Item[]>("http://localhost:8080/api/items/available/name/" + itemName)
+		return this.http.get<Item[]>(this.URL + "/available/search/" + itemName)
 			.pipe(
 				catchError(error => {
 					console.log('HTTP error:', error);
@@ -33,7 +35,7 @@ export class ItemService {
 	}
 
 	getAvailableItemsBySubCategories(subCategories: string[]): Observable<Item[]> {
-		return this.http.get<Item[]>("http://localhost:8080/api/items/available/sub-category/" + subCategories)
+		return this.http.get<Item[]>(this.URL + "/available/sub-category/" + subCategories)
 			// .pipe(
 			// 	catchError(error => {
 			// 		console.log('HTTP error:', error);
@@ -43,7 +45,7 @@ export class ItemService {
 	}
 
 	getAvailableItemsByNameAndSubcategories(itemName: string, subCategories: string[]): Observable<Item[]> {
-		return this.http.get<Item[]>("http://localhost:8080/api/items/available/" + itemName + "/" + subCategories)
+		return this.http.get<Item[]>(this.URL + "/available/" + itemName + "/" + subCategories)
 			.pipe(
 				catchError(error => {
 					console.log('HTTP error:', error);
@@ -54,9 +56,24 @@ export class ItemService {
 
 
 	// TODO: Add a post method to add an item
-	// TODO: Add a post method to add multiple items
-	// TODO: Add a put method to update an item
-	// TODO: Add a delete method to delete an item
+	create(item: Item): Observable<Item> {
+		return this.http.post<Item>(this.URL + "/", item);
+	}
 
+	// TODO: Add a post method to add multiple items
+	createMultiple(items: Item[]): Observable<Item[]> {
+		return this.http.post<Item[]>(this.URL + "/multiple", items);
+	}
+
+
+	// TODO: Add a put method to update an item
+	update(item: Item): Observable<Item> {
+		return this.http.put<Item>(this.URL + "/", item);
+	}
+
+	// TODO: Add a delete method to delete an item
+	delete(id: number): Observable<Item> {
+		return this.http.delete<Item>(this.URL + "/" + id);
+	}
 
 }
