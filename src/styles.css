@@ -16,3 +16,7 @@ body {
     width: 100% !important;
     height: 100%;
 }
+
+.modal-backdrop {
+    --bs-backdrop-zindex: 0;
+}

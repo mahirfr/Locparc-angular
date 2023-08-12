@@ -12,7 +12,7 @@ export class LoginComponent {
 
   hiddenContent = true;
   loginError    = false;
-  showPassword  = false;
+  showPassword  = true;
 
   constructor(private formBuilder: FormBuilder,
               private loginService: LoginService,

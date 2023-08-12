@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Category } from 'src/app/model/Category/Category';
-import { SubCategory } from 'src/app/model/Category/SubCategory';
-import { Item } from 'src/app/model/Item';
-import { Manufacturer } from 'src/app/model/Manufacturer/Manufacturer';
-import { Model } from 'src/app/model/Manufacturer/Model';
-import { CategoriesService } from 'src/app/service/categories.service';
-import { ItemService } from 'src/app/service/item.service';
-import { ManufacturersService } from 'src/app/service/manufacturers.service';
-import { ModelService } from 'src/app/service/model.service';
-import { SubCategoryService } from 'src/app/service/sub-category.service';
+import { Component, ViewChild                                                             } from '@angular/core'                          ;
+import { FormArray           , FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'                         ;
+import { Observable                                                            } from 'rxjs'                                   ;
+import { Category                                                              } from 'src/app/model/Category/Category'        ;
+import { SubCategory                                                           } from 'src/app/model/Category/SubCategory'     ;
+import { Item                                                                  } from 'src/app/model/Item'                     ;
+import { Manufacturer                                                          } from 'src/app/model/Manufacturer/Manufacturer';
+import { Model                                                                 } from 'src/app/model/Manufacturer/Model'       ;
+import { CategoriesService                                                     } from 'src/app/service/categories.service'     ;
+import { ItemService                                                           } from 'src/app/service/item.service'           ;
+import { ManufacturersService                                                  } from 'src/app/service/manufacturers.service'  ;
+import { ModelService                                                          } from 'src/app/service/model.service'          ;
+import { SubCategoryService                                                    } from 'src/app/service/sub-category.service'   ;
 
 @Component({
   selector: 'app-equipement',
@@ -25,16 +25,13 @@ export class EquipementComponent {
   itemName            : string = "";
   selectedSubCategory : string = "";
   selectedModel       : string = "";
-  itemDescription     : string = "";
+  itemDescription     : string | null = null;
   quantity            : number = 1 ;
   // warantyDate         : string = "";
   // arrivalDate         : string = "";
   existing            : boolean = true;
   onMaintenance       : boolean = false;
-
-  // TODO: add a form group for adding a subcategory
-
-  // TODO: add a form group for adding a model
+  imageUrl              : string | null = null;
 
   // form group for category
   formGroupCategory   : FormGroup;
@@ -82,6 +79,7 @@ export class EquipementComponent {
                     // warantyDate        : ["", [Validators.pattern("^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])d{4}$")]],
                     existing           : true,
                     onMaintenance      : false,
+                    imageUrl             : ""
                   }); 
                   // form group for category
                   this.formGroupCategory = this.formBuilder.group({
@@ -110,6 +108,7 @@ export class EquipementComponent {
     return this.formGroupSerialNumber.controls['serialNumbers'] as FormArray;
   }
 
+
   getRange(count: number): number[] {
     const range = [];
     for (let i = 0; i < count; i++) {
@@ -117,6 +116,7 @@ export class EquipementComponent {
     }
     return range;
   }
+
 
   generateSerialNumberFormControls(selectedQuantity: number) {
     this.serialNumbers.clear();
@@ -179,37 +179,41 @@ export class EquipementComponent {
     this.manufacturerId = manufacturerId;
   }
 
-  openSerialNumberModal() {
-    
-  }
   
-  // TODO: add image file path
+  // add item to database
   onSubmit() {
-    // add item to database
-    this.itemName = this.formGroup.get('itemName')?.value;
+    // assign formFields to attributes
+    this.itemName            = this.formGroup.get('itemName'           )?.value;
     this.selectedSubCategory = this.formGroup.get('selectedSubCategory')?.value;
-    this.selectedModel = this.formGroup.get('selectedModel')?.value;
-    this.quantity = this.formGroup.get('quantity')?.value;
-    this.itemDescription = this.formGroup.get('itemDescription')?.value;
-    this.onMaintenance = this.formGroup.get('onMaintenance')?.value;
-    this.existing = this.formGroup.get('existing')?.value;
+    this.selectedModel       = this.formGroup.get('selectedModel'      )?.value;
+    this.quantity            = this.formGroup.get('quantity'           )?.value;
+    this.itemDescription     = this.formGroup.get('itemDescription'    )?.value;
+    this.onMaintenance       = this.formGroup.get('onMaintenance'      )?.value;
+    this.existing            = this.formGroup.get('existing'           )?.value;
+    this.imageUrl            = this.formGroup.get('imageUrl'           )?.value;
 
-    if (this.itemName.length != 0 && this.itemName != undefined ||
-        this.selectedSubCategory.length != 0 && this.selectedSubCategory != undefined ||
-        this.quantity != undefined && this.quantity <= 0 ||
-        this.existing != undefined || 
-        this.onMaintenance != undefined) {
+    // if the user didn't enter a description
+    if (this.itemDescription == undefined) 
+      this.itemDescription = null;  
+    
+    // if the user didn't enter an image url
+    if (this.imageUrl == undefined)
+      this.imageUrl = null;
+
       
-      // if the category is not informatique, we don't need to add a model
+    if (this.itemName.length != 0 && this.itemName != undefined ||
+      this.selectedSubCategory.length != 0 && this.selectedSubCategory != undefined ||
+      this.quantity != undefined && this.quantity < 1 ||
+      this.existing != undefined || 
+      this.onMaintenance != undefined) {
+
+        // FIXME: REFACTOR THE BELLOW CODE !!!! 
+      
+      // if the category IS NOT informatique, we don't need to add a model
       if (this.categories[this.categoryId].name != "INFORMATIQUE" &&
           (this.selectedModel.length == 0 ||
             this.selectedModel == undefined)) { 
 
-        if (this.itemDescription == undefined) {
-          this.itemDescription = "";  
-        }
-
-        console.log(this.categories[this.categoryId].subCategories!.find(subCategory => subCategory.name == this.selectedSubCategory));
 
         const item: Item = {
           name: this.itemName,
@@ -223,46 +227,32 @@ export class EquipementComponent {
           },
           description: this.itemDescription,
           onMaintenance: this.onMaintenance,
-          existing: this.existing
+          existing: this.existing,
+          quantity: this.quantity,
+          imageUrl: this.imageUrl
         }
 
 
-        if (Number.isInteger(this.quantity) && this.quantity >= 2) {
-          let items: Item[] = [];
-          for (let i = 0; i < this.quantity; i++) {
-            // adding the same item to the array
-            items.push(item);
-          }
-          // istead of calling the service multiple times, we call it once
-          this.itemService.createMultiple(items).subscribe({
-              next: () => {
-                alert("Equipements créés avec succès");
-              },
-              error: (error) => {
-                alert("Erreur lors de la création des équipements  " + error);
-              }
-            }
-          );
-        } else if (Number.isInteger(this.quantity) && this.quantity == 1) {
-          this.itemService.create(item).subscribe({
-              next: () => {               
+        this.itemService.create(item).subscribe({
+            next: () => {  
+              if (item.quantity > 1 )             
+                alert("Equipements créé avec succès");
+              else 
                 alert("Equipement créé avec succès");
-              },
-              error: () => {
-                alert("Erreur lors de la création de l'équipement");
-              }
+            },
+            error: () => {
+              alert("Erreur lors de la création");
             }
-          );
-        }
+          }
+        );
+      
 
       }
       // if the category is informatique, we need to add a model and possibly serial numbers
-      else if (this.categories[this.categoryId].name == "INFORMATIQUE" &&
+      else if ((this.categories[this.categoryId].name === "INFORMATIQUE"    || 
+                this.categories[this.categoryId].name === "ELECTROMENAGER") &&
           (this.selectedModel.length > 0 || this.selectedModel != undefined)) {
             
-        if (this.itemDescription == undefined) {
-          this.itemDescription = "";  
-        }
 
         const subCategory = {
           id: this.categories[this.categoryId].subCategories!.find(subCategory => subCategory.name == this.selectedSubCategory)!.id,
@@ -282,15 +272,23 @@ export class EquipementComponent {
           }
         }
         
+        if (this.imageUrl === "" || this.imageUrl === undefined) {
+          this.imageUrl = null;
+        }
+
+        // assign what's independent of model
         const item: Item = {
           name: this.itemName,
           subCategory: subCategory,
           model: model,
+          quantity: 1,
           description: this.itemDescription,
           onMaintenance: this.onMaintenance,
-          existing: this.existing
+          existing: this.existing,
+          imageUrl: this.imageUrl
         }
 
+        // if it's only 1 item without a serial #
         if (this.serialNumberArray.length == 0 && this.quantity == 1) {
           this.itemService.create(item).subscribe({
               next: () => {
@@ -300,13 +298,14 @@ export class EquipementComponent {
                 alert("Erreur lors de la création de l'équipement");
               }
             });
-        } else if (this.serialNumberArray.length == 0 && this.quantity > 1) {
+        } // More than 1 item without serial #
+        else if (this.serialNumberArray.length == 0 && this.quantity > 1) {
           let items: Item[] = [];
           for (let i = 0; i < this.quantity; i++) {
             // adding the same item to the array
             items.push(item);
           }
-          // istead of calling the service multiple times, we call it once
+          // istead of calling the service multiple times, we call it just once
           this.itemService.createMultiple(items).subscribe({
               next: () => {
                 alert("Equipements créés avec succès");
@@ -316,9 +315,10 @@ export class EquipementComponent {
               }
             }
           );
-        } else if (this.serialNumberArray.length > 0 && this.quantity > 1) {
+        } // multiple items and at least one serial # 
+        else if (this.serialNumberArray.length > 0 && this.quantity > 1) {
           const items: Item[] = [];
-          if (this.serialNumberArray.length != this.quantity) {
+          if (this.serialNumberArray.length < this.quantity) {
             for (let i = 0; i < this.quantity - this.serialNumberArray.length; i++)
               this.serialNumberArray.push(null);
           }
@@ -330,6 +330,7 @@ export class EquipementComponent {
               description: this.itemDescription,
               onMaintenance: this.onMaintenance,
               existing: this.existing,
+              quantity: 1,
               serialNumber: this.serialNumberArray[i]
             }
             items.push(item);
@@ -344,7 +345,7 @@ export class EquipementComponent {
               }
             });
         } else if (this.serialNumberArray.length > 0 && this.quantity == 1) {
-          
+          // beacuse serial numbers are unique they need to be null 
           if (this.serialNumberArray[0] == undefined || this.serialNumberArray[0] == "")
             this.serialNumberArray[0] = null;
 
@@ -355,6 +356,7 @@ export class EquipementComponent {
             description: this.itemDescription,
             onMaintenance: this.onMaintenance,
             existing: this.existing,
+            quantity: 1,
             serialNumber: this.serialNumberArray[0]
           }
 
@@ -391,7 +393,8 @@ export class EquipementComponent {
             this.categoryService.getAllCategories().subscribe(
               categories => this.categories = categories
             );
-            console.log("Catégorie créée avec succès");
+            this.formGroupCategory.get("categoryName")?.setValue("");
+            alert("Catégorie créé avec succès");
           },
           // FIXME: error handling
           error: (error) => {
@@ -421,7 +424,8 @@ export class EquipementComponent {
             this.manufacturerService.getAllManufacturers().subscribe(
               manufacturers => this.manufacturers = manufacturers
             );
-            console.log("Fabricant créé avec succès");
+            this.formGroupManufacturer.get("manufacturerName")?.setValue("");
+            alert("Fabricant créé avec succès");
           },
         // FIXME: error handling
           error: (error) => {
@@ -462,7 +466,8 @@ export class EquipementComponent {
             this.categoryService.getAllCategories().subscribe(
               categories => this.categories = categories
             );
-            console.log("Sous catégorie créée avec succès");
+            this.formGroupSubCategory.get("subCategoryName")?.setValue("");
+            alert("Sous catégorie créé avec succès");
           },
           // FIXME: error handling
           error: (error) => {
@@ -501,7 +506,9 @@ export class EquipementComponent {
             this.manufacturerService.getAllManufacturers().subscribe(
               manufacturers => this.manufacturers = manufacturers
             );
-            console.log("Modèle créé avec succès");
+            this.formGroupModel.get("modelName")?.setValue("");
+            alert("Modèle créé avec succès");
+            
           },
           // FIXME: error handling
           error: (error) => {

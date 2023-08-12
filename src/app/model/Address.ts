@@ -1,10 +1,12 @@
 import { Country } from "./Country";
 
-export interface Address {
-    id            : number | null,
-    street        : string,
-    addressDetails: string,
-    city          : string,
-    postalCode    : string,
-    country       : Country | null
+export class Address {
+    id             ?: number | null ;
+    streetNumber   ?: string        ;
+    street         ?: string        ;
+    addressDetails ?: string        ;
+    city           ?: string        ;
+    postalCode     ?: string        ;
+    country        ?: Country | null;
+
 }

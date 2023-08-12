@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Order } from 'src/app/model/Order';
-import { OrderService } from 'src/app/service/order.service';
-import { OrderItems } from 'src/app/model/OrderItems';
+import { Component   , OnInit } from '@angular/core'                ;
+import { Order                } from 'src/app/model/Order'          ;
+import { OrderService         } from 'src/app/service/order.service';
+import { OrderItems           } from 'src/app/model/OrderItems'     ;
+import { catchError, throwError } from 'rxjs';
 
 
 
@@ -12,23 +13,59 @@ import { OrderItems } from 'src/app/model/OrderItems';
 })
 export class PlanningComponent implements OnInit {
 
-  orders: Order[] = [];
-  orderedItems: OrderItems[] = [];
-  ordered: Order = new Order();
+  orders        : Order[] = []       ;
+  orderedItems  : OrderItems[] = []  ;
+  ordered       : Order = new Order();
+  selectedOrders: any[] = []         ;
+  acceptedOrder : Order | undefined  ;
+  refusedOrder  : Order | undefined  ;
+  returnCode     = 0                 ;
+  refusalMotive : string = "Matériel momentanément indisponible";
 
+  
   constructor(private orderService: OrderService) { }
 
   ngOnInit() {
-    this.orderService.getPendingOrders().subscribe(
-      orders => this.orders = orders
-    ) 
+    this.orderService.getPendingOrders()
+    .subscribe({
+      next: (orders: Order[]) => {
+        this.orders = orders;
+      },
+      error: requestError => {
+        if (requestError.status === 404) {
+          this.returnCode = 404;
+        } else {
+          this.returnCode = 500;
+        }
+      }
+    });
   }
 
-  getOrder(id?: number): void {
-    this.orderService.getOrderById(id).subscribe(
-      order => this.ordered = order
+  getOrderById(id?: number): void {
+    this.orderService.getOrderById(id).subscribe((order: Order) => {
+        this.ordered = order;
+      }
     )
   }
 
-  
+  // TODO: accept order
+  acceptOrder(ordered: Order) {
+    this.orderService.approveOrder(ordered).subscribe((order) => {
+      this.acceptedOrder = order;
+      this.orderService.removeOrder(this.orders, ordered);
+      console.log(this.orders);
+      alert("La commande a été validée !");
+      
+    })
+  }
+
+  // TODO: refuse order
+  refuseOrder(order: Order, refusalMotive: string) {
+    this.orderService.refuseOrder(order, refusalMotive).subscribe((o) => {
+      this.refusedOrder = o;
+      this.orderService.removeOrder(this.orders, order);
+      console.log(this.orders);
+      alert("La commande a été refusée !");
+    })
+  }
 }

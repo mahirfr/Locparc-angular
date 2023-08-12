@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { User } from '../model/User';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { Injectable                  } from '@angular/core'                ;
+import { User                        } from '../model/User'                ;
+import { HttpClient                  } from '@angular/common/http'         ;
+import { BehaviorSubject, Observable } from 'rxjs'                         ;
+import { Router                      } from '@angular/router'              ;
+import { environment                 } from 'src/environments/environment' ;
 
 
 @Injectable({
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class LoginService {
 
   public _connectedUser = new BehaviorSubject<User | null>(null);
+  URL = environment.serverUrl;
 
   
   constructor(private http:   HttpClient,
@@ -44,7 +46,7 @@ export class LoginService {
   login(user: User): Observable<string> {
     /** Post method sends the user to the url as well as header where the header indicates the type of response.
     It returns an Obsevable which is asyncronus */
-    return this.http.post("http://localhost:8080/api/login", user, {responseType: "text"});
+    return this.http.post(this.URL + "/api/login", user, {responseType: "text"});
   }
 
 

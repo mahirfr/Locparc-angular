@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LoginService } from 'src/app/service/login.service';
 
 @Component({
   selector: 'app-access-denied',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./access-denied.component.css']
 })
 export class AccessDeniedComponent {
+
+  isConnected = this.loginService._connectedUser.value != null;
+
+  constructor(private loginService: LoginService) { }
 
 }

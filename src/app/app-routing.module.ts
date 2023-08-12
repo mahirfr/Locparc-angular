@@ -7,10 +7,11 @@ import { ShoppingCartComponent } from './utils/shopping-cart/shopping-cart.compo
 import { EquipementComponent } from './pages/equipement/equipement.component';
 import { AccessDeniedComponent } from './pages/errors/access-denied/access-denied.component';
 import { LenderGuard } from './guards/lender.guard';
-import { Order } from './model/Order';
 import { OrdersComponent } from './pages/orders/orders.component';
-import { CreateUsersComponent } from './pages/create-users/create-users.component';
+import { UsersComponent } from './pages/users/users.component';
 import { AdminGuard } from './guards/admin.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 // TODO: Add routes for new components
 // TODO: Add route for not found page
@@ -21,17 +22,25 @@ const routes: Routes = [
     component: HomeComponent, 
     canActivate: [UserGuard]
   },
-  {path: "", redirectTo: "home", pathMatch: "full"},
-  {path: "login", component: LoginComponent},
   {
-    path: "access-denied",
-    component: AccessDeniedComponent, 
-    canActivate: [UserGuard, LenderGuard]
+    path: "", 
+    redirectTo: "home",
+    pathMatch: "full"
+  },
+  {
+    path: "login",
+    component: LoginComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: "orders",
     component: OrdersComponent,
-    canActivate: [AdminGuard, LenderGuard]
+    canActivate: [UserGuard]
+  },
+  {
+    path: "profile",
+    component: ProfileComponent,
+    canActivate: [UserGuard] 
   },
   {
     path: "shopping-cart", 
@@ -44,9 +53,14 @@ const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
-    path: "create-users",
-    component: CreateUsersComponent,
+    path: "utilisateurs",
+    component: UsersComponent,
     canActivate: [AdminGuard]
+  },
+  {
+    path: "**",
+    component: AccessDeniedComponent,
+    canActivate: [AuthGuard]
   },
 ];
 

@@ -1,6 +1,7 @@
 <h1 class="text-center text-white mt-3">Ajoutez des équipements</h1>
 
-
+<!-- TODO: CREATE A MAT-TAB-GROUP -->
+<!-- with a field for searching and for modifying/deleting an item -->
 <form [formGroup]="formGroup"
     (ngSubmit)="onSubmit()">
     
@@ -12,12 +13,6 @@
             Nom de l'équipement requis
         </mat-error>
     </mat-form-field>    
-
-    <!-- TODO: Create an input field for a serial number -->
-    <!-- <mat-form-field >
-        <mat-label>Numéro de série</mat-label>
-        <input matInput formControlName="serialNumber">
-    </mat-form-field> -->
     
     <!-- Sub category field -->
     <mat-form-field class="form-field">
@@ -33,7 +28,6 @@
                 </button> 
             </mat-optgroup>
             <hr>
-            <!-- TODO: Make a pop-up modal where you can add a category -->
             <button type="button" mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal1">
                 <mat-icon>add</mat-icon> Catégorie
             </button>        
@@ -57,7 +51,6 @@
                 </button> 
             </mat-optgroup>
             <hr>
-            <!-- TODO: Make a pop-up modal where you can add a model -->
             <button type="button" mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal2">
                 <mat-icon>add</mat-icon> Fabricant
             </button>
@@ -78,7 +71,9 @@
         <mat-error *ngIf="formGroup.get('quantity')?.hasError('pattern')">
             Entrez un nombre
         </mat-error>
-        <button type="button" mat-raised-button color="primary" class="mx-1 button-size" (click)="generateSerialNumberFormControls(formGroup.get('quantity')?.value)" data-bs-toggle="modal" data-bs-target="#myModal5" [disabled]="!formGroup.get('selectedModel')?.enabled || !formGroup.get('quantity')?.value || !formGroup.valid">
+        <button type="button" mat-raised-button color="primary" class="mx-1 button-size" 
+        (click)="generateSerialNumberFormControls(formGroup.get('quantity')?.value)" data-bs-toggle="modal" data-bs-target="#myModal5" 
+        [disabled]="!formGroup.get('selectedModel')?.enabled || !formGroup.get('quantity')?.value || !formGroup.valid">
             <mat-icon>add</mat-icon> Numéro de série
         </button>
     </mat-form-field>
@@ -115,10 +110,14 @@
         </mat-error>
     </mat-form-field>  -->
 
+    <!-- TODO: make a field to add an image url-->
+    <mat-form-field>
+        <mat-label>url de l'image</mat-label>
+        <input matInput formControlName="imageUrl" type="url" />
+    </mat-form-field>
 
-    <!-- TODO: Create an on maintenance checkbox -->
     <mat-checkbox formControlName="onMaintenance"><p class="text-white mt-2">En maintenance</p></mat-checkbox>
-    <!-- TODO: Create an "existant" checkbox -->
+
     <mat-checkbox formControlName="existing"><p class="text-white mt-2">Existant</p></mat-checkbox>
 
     <button [disabled]="!formGroup.valid" type="submit" mat-raised-button color="primary">Envoyer</button>
@@ -147,7 +146,7 @@
                         </mat-error>
 
                     </mat-form-field>
-                    <button [disabled]="!formGroupCategory.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
+                    <button [disabled]="!formGroupCategory.valid" type="submit" mat-raised-button color="primary" data-bs-dismiss="modal">Sauvgarder</button>
                 </form>
           
             </div>
@@ -176,7 +175,7 @@
                         Nom du fabricant requis
                     </mat-error>
                 </mat-form-field>
-                <button [disabled]="!formGroupManufacturer.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
+                <button [disabled]="!formGroupManufacturer.valid" type="submit" mat-raised-button color="primary" data-bs-dismiss="modal">Sauvgarder</button>
             </form>
           
         </div>
@@ -205,7 +204,7 @@
                         Nom de la sous-catégorie requis
                     </mat-error>
                 </mat-form-field>
-                <button [disabled]="!formGroupSubCategory.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
+                <button [disabled]="!formGroupSubCategory.valid" type="submit" mat-raised-button color="primary" data-bs-dismiss="modal">Sauvgarder</button>
             </form>
 
         </div>
@@ -218,7 +217,7 @@
 
 
 <!-- Model modal -->
-<div class="modal fade text-white" id="myModal4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel4" aria-hidden="true">
+<div class="modal fade text-white" id="myModal4" #myModal4 data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel4" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -235,7 +234,7 @@
                         Nom de modèle requis
                     </mat-error>
                 </mat-form-field>
-                <button [disabled]="!formGroupModel.valid" type="submit" mat-raised-button color="primary">Sauvgarder</button>
+                <button [disabled]="!formGroupModel.valid" type="submit" mat-raised-button color="primary" data-bs-dismiss="modal">Sauvgarder</button>
             </form>
 
         </div>

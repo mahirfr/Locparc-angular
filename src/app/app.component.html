@@ -4,12 +4,8 @@
         
         <a class="navbar-brand" href="/home"><img src="../assets/images/logo-mns.svg"></a>
         
-        <!-- TODO make a shopping cart icon from angular material (this one does not work) -->
-        <a class="ms-auto shopping_cart" routerLink="shopping-cart">
-            <mat-icon color="primary" *ngIf="connectedUser != null">shopping_cart</mat-icon>
-        </a>
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
@@ -17,30 +13,51 @@
 <!-- TODO: add a user creation link for admins -->
 <!-- TODO: create a user profile compornent -->
 
-        <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav">
+        <div class="navbar-collapse collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+
                 <li class="nav-item" *ngIf="connectedUser != null">
                     <a class="nav-link" routerLink="home" routerLinkActive="active">Accueil</a>
                 </li>
-                <li class="nav-item" *ngIf="connectedUser != null">
+
+                <li class="nav-item" *ngIf="connectedUser != null && connectedUser.role?.name != 'ROLE_USER' ">
                     <a class="nav-link" routerLink="equipement" routerLinkActive="active">Matériel</a>
                 </li>
+                
                 <li class="nav-item" *ngIf="connectedUser != null">
                     <a class="nav-link" routerLink="orders" routerLinkActive="active">Commandes</a>
                 </li>
+                
+                <li class="nav-item" *ngIf="connectedUser != null && connectedUser.role?.name == 'ROLE_ADMIN' ">
+                    <a class="nav-link" routerLink="utilisateurs" routerLinkActive="active">Utilisateurs</a>
+                </li>
+                
                 <li class="nav-item" *ngIf="connectedUser != null">
                     <a class="nav-link" routerLink="profile" routerLinkActive="active">Profil</a>
                 </li>
+                
+                
                 <li class="nav-item" *ngIf="connectedUser == null">
                     <a class="nav-link" routerLink="login" routerLinkActive="active">Connexion</a>
                 </li>
+                
                 <li class="nav-item" *ngIf="connectedUser != null">
                     <a class="nav-link" style="cursor: pointer;" (click)="onLogout()">Déconnexion</a>
                 </li>
             </ul>
+            <ul class="navbar-nav align-content-end">
+
+                <li class="nav-item " *ngIf="connectedUser != null">
+                    <a class="nav-link shopping_cart" routerLink="shopping-cart" routerLinkActive="active">
+                        <mat-icon>shopping_cart</mat-icon>
+                    </a>
+                </li>
+            </ul>
+            
         </div>
     </div>
 </nav>
 
 
 <router-outlet></router-outlet>
+<app-spinner></app-spinner>

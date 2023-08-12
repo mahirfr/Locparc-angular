@@ -16,6 +16,7 @@ export class AdminGuard {
 
   if (this.loginService._connectedUser.value?.role?.name == "ROLE_ADMIN") 
     return true;
+  
 
   return this.router.parseUrl("/access-denied");
 

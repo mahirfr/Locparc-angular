@@ -14,10 +14,10 @@ export class AppComponent {
 
   
 
-  constructor(private _loginService: LoginService) {}
+  constructor(private loginService: LoginService) {}
 
   ngOnInit() {
-    this._loginService._connectedUser.subscribe(
+    this.loginService._connectedUser.subscribe(
       (user) => {
         this.connectedUser = user,
         this.isAdmin = user?.role?.name == "ROLE_ADMIN"
@@ -26,7 +26,7 @@ export class AppComponent {
   }
 
   onLogout() {
-    this._loginService.logout();
+    this.loginService.logout();
   }
 
   

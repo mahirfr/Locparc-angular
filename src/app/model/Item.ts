@@ -6,11 +6,13 @@ export interface Item {
     serialNumber  ?: string | null,
     arrivalDate   ?: Date,
     name           : string,
-    description   ?: string,
+    description   ?: string | null,
     existing       : boolean,
+    quantity       : number,
     pricePerDay   ?: number,
     waranty       ?: Date,
     onMaintenance  : boolean,
+    imageUrl      ?: string | null,
     subCategory   ?: SubCategory,
     model         ?: Model
 }

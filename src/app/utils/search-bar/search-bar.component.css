@@ -6,6 +6,27 @@
     max-width: 400px;
 }
 
+.img-max-width {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.container_max_width {
+    max-width: 800px;
+}
+
+.min_width {
+    min-width: 300px;
+}
+
 .checkboxess {
     color: white !important;
+}
+
+@media screen and (max-width: 800px) {
+
+    .container_max_width {
+        max-width: 400px;
+    }
+    
 }

@@ -5,8 +5,8 @@ import { User } from "./User";
 
 export class Order {
     id           ?: number | undefined;
-    startDate    ?: Date;
-    endDate      ?: Date;
+    startDate    ?: any;
+    endDate      ?: any;
     event        ?: string;
     user         ?: User;
     orderedItems ?: OrderItems[];
