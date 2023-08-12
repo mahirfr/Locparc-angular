@@ -1,6 +1,6 @@
 import { Address } from "./Address";
 import { OrderItems } from "./OrderItems";
-import { Status } from "./Status";
+import { Request } from "./Request";
 import { User } from "./User";
 
 export class Order {
@@ -10,6 +10,6 @@ export class Order {
     event        ?: string;
     user         ?: User;
     orderedItems ?: OrderItems[];
-    status       ?: Status;
+    request      ?: Request;
     address      ?: Address;
 }

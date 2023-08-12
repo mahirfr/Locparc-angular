@@ -51,6 +51,7 @@ export class MyOrdersComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === "remove") {
+        console.log(order)  
         this.deleteOrder(order);
         alert("Commande annulé");
       }
@@ -59,8 +60,8 @@ export class MyOrdersComponent {
 
   deleteOrder(order: Order) {
     if (order.id) {
-      this.orderService.deleteOrder(order.id);
-      this.myPendingOrders = this.myPendingOrders.filter((o) => order.id === o.id);
+      this.orderService.deleteOrder(order.id).subscribe();
+      this.myPendingOrders = this.myPendingOrders.filter((o) => order.id != o.id);
       console.log("delete Order" + order.id)
     }
     console.log(this.myPendingOrders);

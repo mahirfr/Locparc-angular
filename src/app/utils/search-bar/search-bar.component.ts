@@ -14,7 +14,7 @@ import { ShoppingCartService                          } from 'src/app/service/sh
 	styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent implements OnInit {
-	searchQuery: string = "";
+	searchQuery = "";
 	categories: Category[] = [];
 	searchResults: any[] = [];
 	items: any[] = [];

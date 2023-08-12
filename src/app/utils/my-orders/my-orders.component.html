@@ -1,5 +1,5 @@
 <ng-container [ngSwitch]="returnCode" class="mt-3">
-    <h2 class="text-center text-white" *ngIf="returnCode === 0 || myPendingOrders.length != 0">Mes commandes en attente</h2>
+    <h2 class="text-center text-white" *ngIf="returnCode === 0 && myPendingOrders.length != 0">Mes commandes en attente</h2>
     <div class="custom-container" >
         <table>
             <tbody>
@@ -13,8 +13,8 @@
                 </td>
                 
                 <td data-label="Action">
-                  <button type="button" mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getOrderById(order.id)">Consulter</button>
-                  <button type="button" mat-raised-button color="warn"  (click)="openRemovalDialog(order)">Annuler</button>
+                  <button  mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal7" (click)="getOrderById(order.id)">Consulter</button>
+                  <button  mat-raised-button color="warn"  (click)="openRemovalDialog(order)">Annuler</button>
                 </td>
                 
               </tr>
@@ -25,7 +25,7 @@
     
     <!-- Consulting modal -->
     <ng-container *ngIf="ordered">
-        <div class="modal fade text-white" id="myModal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade text-white" id="myModal7" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -73,9 +73,11 @@
     <div *ngSwitchCase="404" class="mx-auto text-center">
         <h2 class="text-center text-white">Il n'y a pas de commandes en attente</h2>
         <a mat-raised-button color="accent"  routerLink="/home">Retourner à l'accueil</a>
-      </div>
+    </div>
     
-      <div *ngSwitchCase="500">
+    <div *ngSwitchCase="500">
         <h2 class="text-center text-white">Une erreur s'est produite</h2>
-      </div>
+    </div>
+
+    <h2 class="text-center text-white" *ngIf="myPendingOrders.length === 0 && returnCode === 0">Il n'y a pas de commandes en attente</h2>
 </ng-container>

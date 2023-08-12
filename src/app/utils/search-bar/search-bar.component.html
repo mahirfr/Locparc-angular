@@ -63,7 +63,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" mat-stroked-button color="basic" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" mat-raised-button color="primary" *ngIf="selectedItem && selectedQuantity" (click)="addToCart(selectedItem, selectedQuantity)">Ajouter au panier</button>
+          <button type="button" mat-raised-button color="primary" data-bs-dismiss="modal" *ngIf="selectedItem && selectedQuantity" (click)="addToCart(selectedItem, selectedQuantity)">Ajouter au panier</button>
         </div>
       </div>
     </div>

@@ -41,8 +41,8 @@ export class OrderService {
     return this.http.get<Order[]>(`${this.URL}/api/orders/get-my-history`);
   }
 
-  getUserHistory(email: string): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.URL}/api/orders/admin/get-user-history?email=${email}`);
+  getUserHistory(name: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.URL}/api/orders/admin/get-user-history?name=${name}`);
   }
 
   // TODO: get order by id 
@@ -71,6 +71,7 @@ export class OrderService {
   persistOrder(order: Order) {
     return this.http.post<Order>(`${this.URL}/api/orders/persist`, order);
   }
+
 
   deleteOrder(id: number) {
     return this.http.delete<Order>(`${this.URL}/api/orders/delete/${id}`)

@@ -10,12 +10,12 @@
         (ngSubmit)="onSubmitSearchFormGroup()">
             <mat-form-field>
               <mat-label>Cherchez</mat-label>
-              <input matInput formControlName="searchQuery" placeholder="Ex. Marc Manson...">
+              <input matInput formControlName="searchQuery" placeholder="Ex. John Doe...">
               <mat-hint align="start" *ngIf="newListOfUsers.length > 0">
                 <strong>{{ newListOfUsers.length > 1 ? newListOfUsers.length + " Utilisateurs" : newListOfUsers.length + " Utilisateur" }}</strong> 
             </mat-hint>
             </mat-form-field>
-            <button mat-raised-button color="accent" class="mx-1" >Cherchez</button>
+            <button mat-raised-button color="accent" class="mx-1">Cherchez</button>
         </form>
         
         <div class="custom-container mt-5">
