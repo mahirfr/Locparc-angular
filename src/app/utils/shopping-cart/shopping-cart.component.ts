@@ -2,7 +2,7 @@ import { Component               , ViewChild } from '@angular/core'             
 import { MatDialog                           } from '@angular/material/dialog'                         ;
 import { Item                                } from 'src/app/model/Item'                               ;
 import { ShoppingCartService                 } from 'src/app/service/shopping-cart-service'            ;
-import { DialogComponent                     } from '../dialog/dialog.component'                       ;
+import { DialogComponent                     } from '../dialogs/dialog/dialog.component'                       ;
 import { OrderService                        } from 'src/app/service/order.service'                    ;
 import { LoginService                        } from 'src/app/service/login.service'                    ;
 import { User                                } from 'src/app/model/User'                               ;
@@ -21,13 +21,14 @@ import { DatePipe } from '@angular/common';
 export class ShoppingCartComponent {
 
   // TODO: get selectedItem
-  cartItems       : Item[] | null = [];
-  selectedQuantity: number | undefined;
-  connectedUser   : User | null = null;
-  isAdmin          = false            ;
-  startDate       : Date | undefined  ;
-  endDate         : Date | undefined  ;
-  order           = new Order();
+  cartItems        : Item[] | null = [];
+  selectedQuantity: number | undefined ;
+  connectedUser    : User | null = null;
+  isAdmin          = false             ;
+  startDate        : Date | undefined  ;
+  endDate          : Date | undefined  ;
+  order            = new Order()       ;
+  timeZone         = 'Europe/Paris'    ;
   
   @ViewChild(DateRangePickerComponent) dateRangePicker: DateRangePickerComponent | undefined;
 
@@ -114,8 +115,8 @@ export class ShoppingCartComponent {
     dialogRef.afterClosed().subscribe(result => {
 
       if (this.order.id != undefined && this.order.id != null) {
-        this.order.startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd') as string;
-        this.order.endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd') as string;
+        this.order.startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd', this.timeZone) as string;
+        this.order.endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd', this.timeZone) as string;
         
         if (result) {
           let address = new Address();
@@ -140,22 +141,7 @@ export class ShoppingCartComponent {
     });
   }
 
-  openOrderConfirmationDialog() {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      width: '400px',
-      data: { 
-              title: "Confirmation",
-              content: "Procéder à l'envoi de la commande",
-              action: "confirmation"
-            },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === "confirmation") {
-        // console.log(result)
-      }
-    });
-  }
+  
 
   openCartClearingConfirmationDialog() {
     const dialogRef = this.dialog.open(DialogComponent, {

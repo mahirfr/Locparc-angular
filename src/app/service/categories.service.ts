@@ -19,10 +19,6 @@ export class CategoriesService {
 
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(this.URL + "/api/items/categories")
-      // .pipe(error => {
-      //   console.log('HTTP error:', error);
-      //   return throwError(() => new Error('Une erreur est survenue, ressayez plus tard'));
-      // });
   }
 
 }

@@ -59,6 +59,10 @@ export class OrderService {
   approveOrder(order: Order): Observable<Order> {
     return this.http.put<Order>(`${this.URL}/api/orders/approve-order`, order)
   }
+  
+  approveOrderReturn(order: Order, returnDate: Date): Observable<Order> {
+    return this.http.put<Order>(`${this.URL}/api/orders/admin/approve-return/${returnDate}`, order);
+  }
 
   refuseOrder(order: Order, refusalMotive: string): Observable<Order> {
     return this.http.put<Order>(`${this.URL}/api/orders/refuse-order?motive=${refusalMotive}`, order) 
@@ -72,10 +76,19 @@ export class OrderService {
     return this.http.post<Order>(`${this.URL}/api/orders/persist`, order);
   }
 
-
   deleteOrder(id: number) {
-    return this.http.delete<Order>(`${this.URL}/api/orders/delete/${id}`)
+    return this.http.delete<Order>(`${this.URL}/api/orders/admin/delete/${id}`)
   }
+
+  deletePendingOrder(id: number) {
+    return this.http.delete<Order>(`${this.URL}/api/orders/delete-non-approved/${id}`)
+  }
+
+  deleteApprovedOrder(id: number) {
+    return this.http.delete<Order>(`${this.URL}/api/orders/delete-approved/${id}`)
+  }
+
+  
 
 
   buildOrder(order: Order,
@@ -107,6 +120,30 @@ export class OrderService {
       if (o.id === ordered.id)
         orders.splice(index, 1);
     })
+  }
+
+  checkOrderDatesForCancelation(order: Order): boolean {
+    const todaysDate = new Date()               ;
+    const startDate  = new Date(order.startDate);
+    const endDate    = new Date(order.endDate  );
+
+    const todayWithoutTime     = new Date(todaysDate.getFullYear(), todaysDate.getMonth(), todaysDate.getDate());
+    const startDateWithoutTime = new Date(startDate .getFullYear(), startDate .getMonth(), startDate .getDate());
+    const endDateWithoutTime   = new Date(endDate   .getFullYear(), endDate   .getMonth(), endDate   .getDate());
+
+    return (startDateWithoutTime > todayWithoutTime) && (endDateWithoutTime > todayWithoutTime);
+  }
+
+  checkOrderDatesForReturn(order: Order): boolean {
+    const todaysDate = new Date()               ;
+    const startDate  = new Date(order.startDate);
+    const endDate    = new Date(order.endDate);
+    
+    const todayWithoutTime     = new Date(todaysDate.getFullYear(), todaysDate.getMonth(), todaysDate.getDate());
+    const startDateWithoutTime = new Date(startDate .getFullYear(), startDate .getMonth(), startDate .getDate());
+    const endDateWithoutTime   = new Date(endDate   .getFullYear(), endDate   .getMonth(), endDate   .getDate());
+
+    return (startDateWithoutTime <= todayWithoutTime) && (endDateWithoutTime >= todayWithoutTime);
   }
 
 }

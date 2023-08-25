@@ -7,15 +7,15 @@
             <tr *ngFor="let order of orders" class="border">
               <td data-label="Utilisateur"  >{{ order.user?.email }}</td>
               <td data-label="Date de début">{{ order?.startDate | date }}</td>
-              <td data-label="Date de fin"  >{{ order?.endDate   | date }}</td>
+              <td data-label="Date de fin"  >{{ order?.endDate | date }}</td>
               <td data-label="Matériel commandé">
                   <div *ngFor="let items of order.orderedItems">
                     <p class="item-color">{{ items?.item?.name }}</p>
                   </div>
               </td>
               <td data-label="Action">
-                <button type="button" mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal2" (click)="getOrderById(order.id)">Consulter</button>
-                <button type="button" mat-raised-button color="warn" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getOrderById(order.id)">Refuser</button>
+                <button type="button" mat-raised-button color="accent" class="mx-1 mb-1 " data-bs-toggle="modal" data-bs-target="#myModal2" (click)="getOrderById(order.id)">Consulter</button>
+                <button type="button" mat-raised-button color="warn" class="mx-1 mb-1 " data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getOrderById(order.id)">Refuser</button>
               </td>
               
             </tr>

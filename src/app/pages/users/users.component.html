@@ -5,7 +5,7 @@
 <mat-tab-group dynamicHeight class="mat-tab-group" backgroundColor="accent" color="primary">
     <!-- TODO: Cherchez un utilisateur -->
 
-    <mat-tab label="Cherchez utilisateur par prénom" class="text-white">
+    <mat-tab label="Recherche par prénom" class="text-white">
         <form [formGroup]="searchFormGroup"
         (ngSubmit)="onSubmitSearchFormGroup()">
             <mat-form-field>
@@ -27,11 +27,11 @@
                     <td data-label="Nom"   >{{ user.lastName  }}</td>
                     
                     <td data-label="Action">
-                        <button type="button" mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal2" (click)="getUserId(user.id)">
+                        <button type="button" mat-raised-button color="accent" class="mx-1 mb-1" data-bs-toggle="modal" data-bs-target="#myModal2" (click)="getUserId(user.id)">
                             Modifier
                         </button>
                     
-                        <button type="button" mat-raised-button color="warn" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getUserId(user.id)">
+                        <button type="button" mat-raised-button color="warn" class="mx-1 mb-1" data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getUserId(user.id)">
                             Supprimer
                         </button>
                     </td>
@@ -55,11 +55,11 @@
                     <td data-label="Nom"        >{{ user.lastName  }}</td>
                     
                     <td data-label="Action">
-                        <button type="button" mat-raised-button color="accent" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal2" (click)="getUserId(user.id)">
+                        <button type="button" mat-raised-button color="accent" class="mx-1 mb-1 " data-bs-toggle="modal" data-bs-target="#myModal2" (click)="getUserId(user.id)">
                             Modifier
                         </button>
                   
-                        <button type="button" mat-raised-button color="warn" class="mx-1 button-size" data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getUserId(user.id)">
+                        <button type="button" mat-raised-button color="warn" class="mx-1 mb-1" data-bs-toggle="modal" data-bs-target="#myModal1" (click)="getUserId(user.id)">
                             Supprimer
                         </button>
                     </td>

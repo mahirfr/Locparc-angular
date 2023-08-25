@@ -28,7 +28,7 @@ import { MatTabsModule                                  } from '@angular/materia
 import { FormControlForceTypePipe                       } from './pipes/form-control-force-type.pipe'                 ;
 import { MatPaginatorModule                             } from '@angular/material/paginator'                          ;
 import { MatDialogModule                                } from '@angular/material/dialog'                             ;
-import { DialogComponent                                } from './utils/dialog/dialog.component'                      ;
+import { DialogComponent                                } from './utils/dialogs/dialog/dialog.component'                      ;
 import { MAT_DATE_LOCALE, MatNativeDateModule                            } from '@angular/material/core'                               ;
 import { MatDatepickerModule                            } from '@angular/material/datepicker';
 import { DateRangePickerComponent } from './utils/date-range-picker/date-range-picker.component'                         ;
@@ -38,7 +38,8 @@ import { LoadingInterceptor } from './loading.interceptor';
 import { MyOrdersComponent } from './utils/my-orders/my-orders.component';
 import { SearchOrdersComponent } from './utils/search-orders/search-orders.component';
 import { OrderHistoryComponent } from './utils/order-history/order-history.component';
-import { DialogConfirmationComponent } from './utils/dialog-confirmation/dialog-confirmation.component';
+import { DialogConfirmationComponent } from './utils/dialogs/dialog-confirmation/dialog-confirmation.component';
+import { OrderDialogComponent } from './utils/dialogs/order-dialog/order-dialog.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { DialogConfirmationComponent } from './utils/dialog-confirmation/dialog-
     MyOrdersComponent,
     SearchOrdersComponent,
     OrderHistoryComponent,
-    DialogConfirmationComponent
+    DialogConfirmationComponent,
+    OrderDialogComponent
   ],
   imports: [
     BrowserModule          ,

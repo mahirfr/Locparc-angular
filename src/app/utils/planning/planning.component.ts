@@ -1,4 +1,4 @@
-import { Component   , OnInit } from '@angular/core'                ;
+import { ChangeDetectorRef, Component   , OnInit } from '@angular/core'                ;
 import { Order                } from 'src/app/model/Order'          ;
 import { OrderService         } from 'src/app/service/order.service';
 import { OrderItems           } from 'src/app/model/OrderItems'     ;
@@ -13,6 +13,7 @@ import { catchError, throwError } from 'rxjs';
 })
 export class PlanningComponent implements OnInit {
 
+  todaysDate = new Date();
   orders        : Order[] = []       ;
   orderedItems  : OrderItems[] = []  ;
   ordered       : Order = new Order();
@@ -23,9 +24,11 @@ export class PlanningComponent implements OnInit {
   refusalMotive : string = "Matériel momentanément indisponible";
 
   
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService,
+              private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.orders = [];
     this.orderService.getPendingOrders()
     .subscribe({
       next: (orders: Order[]) => {
@@ -53,7 +56,6 @@ export class PlanningComponent implements OnInit {
     this.orderService.approveOrder(ordered).subscribe((order) => {
       this.acceptedOrder = order;
       this.orderService.removeOrder(this.orders, ordered);
-      console.log(this.orders);
       alert("La commande a été validée !");
       
     })
@@ -64,7 +66,6 @@ export class PlanningComponent implements OnInit {
     this.orderService.refuseOrder(order, refusalMotive).subscribe((o) => {
       this.refusedOrder = o;
       this.orderService.removeOrder(this.orders, order);
-      console.log(this.orders);
       alert("La commande a été refusée !");
     })
   }

@@ -55,7 +55,7 @@
         <div class="modal-body" *ngIf="selectedItem">
         <p *ngIf="selectedItem.pricePerDay"><b>Prix journalier:</b> {{ selectedItem.pricePerDay }} €</p><hr>
         <p *ngIf="selectedItem.description"><b>Description:</b> {{ selectedItem.description }}</p><hr>
-          <b>Sélectionnez la quantité:</b> 
+          <b>Sélectionnez la quantité: </b> 
           <select matNativeControl [(ngModel)]="selectedQuantity">
             <option *ngFor="let quantity of getRange(selectedItem.quantity)" [value]="quantity">{{ quantity }}</option>
           </select><hr>
